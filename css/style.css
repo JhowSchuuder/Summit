@@ -1,0 +1,407 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    color: #ffffff;
+    background-color: #050505;
+    scroll-behavior: smooth;
+}
+
+/* Canvas genérico para partículas welcome */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 1.5s ease-in;
+}
+
+/* Canvas do Three.js em fundo, atrás do conteúdo */
+canvas.three-canvas {
+    z-index: 0;
+}
+
+/* Canvas de partículas da welcome-screen, sobre o fundo */
+canvas.welcome-particles {
+    z-index: 1;
+    pointer-events: none;
+}
+
+canvas.visible {
+    opacity: 1;
+}
+
+#container {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+#poem-container {
+    max-width: 1000px; /* Aumentado de 800px para 1000px */
+    width: 95%; /* Aumentado de 90% para 95% */
+    margin: 0 auto;
+    padding-top: 10vh;
+    padding-bottom: 25vh;
+    opacity: 0;
+    transition: opacity 1.5s ease, transform 1.5s ease;
+    transform: translateY(30px);
+}
+
+#poem-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.8rem;
+    margin-bottom: 4rem;
+    font-weight: 700;
+    color: #2d94b1;
+    text-shadow: 0 0 15px rgba(0, 201, 255, 0.8);
+    letter-spacing: 1px;
+}
+
+#poem {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Remover a classe hidden do poema */
+#poem.hidden {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.highlight {
+    color: #00c9ff;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(0, 201, 255, 0.6);
+}
+
+.poem-line {
+    min-height: 2.5em;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.8rem 0;
+    font-style: italic;
+    color: white !important;
+}
+
+.poem-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.poem-stanza {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 3rem;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    visibility: visible !important;
+    transition: opacity 1.2s ease, transform 1.2s ease;
+    padding: 1rem;
+    border-left: 2px solid rgba(0, 201, 255, 0.3);
+}
+
+.poem-stanza.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Author info fixado no rodapé */
+.author-info {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(5, 5, 5, 0.8);
+    padding: 0.8rem 0;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1.5s ease, transform 1.5s ease;
+    transform: translateY(20px);
+}
+
+.author-info.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Modificar a classe hidden para apenas reduzir a opacidade sem esconder */
+.hidden {
+    opacity: 0.1;
+}
+
+.welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #050505;
+    z-index: 100;
+    transition: opacity 1.5s ease;
+    animation: gradientBackground 15s ease infinite;
+    background: linear-gradient(45deg, #050505, #0a1a2f, #071d2a, #0a1f25, #050505);
+    background-size: 400% 400%;
+}
+
+@keyframes gradientBackground {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.welcome-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.welcome-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    color: #ffffff;
+    text-shadow: 0 0 35px rgb(0, 200, 255);
+}
+
+.welcome-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 4rem;
+    color: #ffffff;
+    max-width: 600px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.controls {
+    position: fixed;
+    bottom: auto;
+    top: 1.5rem;
+    left: 1.5rem;
+    right: auto;
+    text-align: left;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+#toggle-scroll {
+    background: transparent;
+    border: 2px solid #00c9ff;
+    color: #00c9ff;
+    box-shadow: none;
+    padding: 12px 25px;
+}
+
+#toggle-scroll:hover {
+    background: rgba(0, 201, 255, 0.2);
+}
+
+button {
+    background: linear-gradient(135deg, #00c9ff 0%, #92fe9d 100%);
+    border: none;
+    border-radius: 30px;
+    color: #050505;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 14px 40px;
+    margin: 0 10px;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 15px rgba(0, 201, 255, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: 0.5s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(0, 201, 255, 0.6);
+}
+
+button:hover::before {
+    left: 100%;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+#start-button {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 201, 255, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(0, 201, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 201, 255, 0);
+    }
+}
+
+#toggle-music {
+    background: transparent;
+    border: 2px solid #00c9ff;
+    color: #00c9ff;
+    box-shadow: none;
+    padding: 12px 25px;
+}
+
+#toggle-music:hover {
+    background: rgba(0, 201, 255, 0.2);
+}
+
+.progress-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 10;
+}
+
+.progress-bar {
+    height: 4px;
+    background: linear-gradient(to right, #00c9ff, #92fe9d);
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 201, 255, 0.5);
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.8rem;
+        margin-bottom: 3rem;
+    }
+    
+    .welcome-title {
+        font-size: 3rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1.2rem;
+        padding: 0 2rem;
+    }
+    
+    #poem {
+        font-size: 1.4rem;
+        line-height: 1.6;
+        gap: 2.5rem;
+    }
+    
+    .poem-line {
+        min-height: 2.2em;
+    }
+    
+    #poem-container {
+        padding-top: 8vh;
+        width: 95%;
+    }
+    
+    .author-info {
+        bottom: 6rem;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+    }
+    
+    .welcome-title {
+        font-size: 2.5rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 3rem;
+    }
+    
+    #poem {
+        font-size: 1.2rem;
+        line-height: 1.5;
+        gap: 2rem;
+    }
+    
+    .poem-line {
+        min-height: 2em;
+        margin: 0.6rem 0;
+    }
+    
+    button {
+        font-size: 1rem;
+        padding: 12px 30px;
+    }
+    
+    #poem-container {
+        padding-top: 7vh;
+        padding-bottom: 20vh;
+    }
+}
