@@ -81,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Adicionar um event listener inline para teste
         startButton.onclick = function() {
             console.log("🖱️ Botão clicado via onclick!");
-            alert("Botão clicado! Iniciando jornada...");
             startJourney();
         };
         
